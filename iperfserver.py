@@ -35,9 +35,15 @@ class IperfServer:
     # runs the ping test for each server
     def run_ping(self):
         cmdline = SCRIPT + " " + self.host
-        print("Pretending to run: " + cmdline)
+        print("\nAbout to run: " + cmdline)
 
-        #os.system(cmdline)
+        status = os.system(cmdline)
+        code = os.waitstatus_to_exitcode(status)
+
+        print("Exited with: " + str(code))
+
+        if code != 0:
+          raise ValueError("oops")
 
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
