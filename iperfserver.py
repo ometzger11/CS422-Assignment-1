@@ -39,11 +39,18 @@ class IperfServer:
         if not country or not site:
             raise ValueError(f"Error calculating distance on {host}: country or site undefined.")
 
+        #print("Site: " + site)
+
         matches = gc.get_cities_by_name(site)
+        #matches = gc.search_cities(site, contains_search=False)
+
+        #print("Done")
+
         location = None
 
         for match in matches:
             city = next(iter(match.values()))
+            #city = match
 
             if city["countrycode"].upper() == country.upper():
                 location = city
