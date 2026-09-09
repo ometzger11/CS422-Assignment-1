@@ -21,7 +21,7 @@ class IperfServer:
         self.country = country
         self.site = site
         self.provider = provider
-        self.distance = self.distance_to_purdue(country, site, host)
+        self.distance = self.distance_to_purdue()
 
         # stuff to find out for the assignment
         self.latitude = None
@@ -34,15 +34,14 @@ class IperfServer:
         self.distance_km = None
 
     # helper for finding the distance in km from the server location to Purdue
-    def distance_to_purdue(self, country, site, host):
+    def distance_to_purdue(self):
+        if not self.country or not self.site:
+            raise ValueError(f"Error calculating distance on {self.host}: country or site undefined.")
 
-        if not country or not site:
-            raise ValueError(f"Error calculating distance on {host}: country or site undefined.")
+        #print("Site: " + self.site)
 
-        #print("Site: " + site)
-
-        matches = gc.get_cities_by_name(site)
-        #matches = gc.search_cities(site, contains_search=False)
+        matches = gc.get_cities_by_name(self.site)
+        #matches = gc.search_cities(self.site, contains_search=False)
 
         #print("Done")
 
@@ -52,7 +51,7 @@ class IperfServer:
             city = next(iter(match.values()))
             #city = match
 
-            if city["countrycode"].upper() == country.upper():
+            if city["countrycode"].upper() == self.country.upper():
                 location = city
                 break
 
