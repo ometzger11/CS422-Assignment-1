@@ -37,6 +37,15 @@ class IperfServer:
         cmdline = SCRIPT + " " + self.host
         print("\nAbout to run: " + cmdline)
 
+        # ** NOTE **
+        # I am planning to use os.popen() here instead
+        # because I then can get the output of the script with
+        # readline()
+        #
+        # See:
+        # https://docs.python.org/3/library/os.html#os.popen
+        # https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects
+
         status = os.system(cmdline)
         code = os.waitstatus_to_exitcode(status)
 
