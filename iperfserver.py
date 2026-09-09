@@ -1,3 +1,4 @@
+import os
 import json
 
 # for distance calculation
@@ -11,7 +12,7 @@ SCRIPT = "./ping_server.sh"
 PURDUE_COORDS = (40.4237, -86.9212)
 
 # build a cache of cities for us to use to compute distance (lat and longitude provided)
-gc = geonamescache.GeonamesCache(min_city_population=500)
+gc = geonamescache.GeonamesCache(min_city_population=1000)
 
 # represents an actual server with info from the JSON dump
 class IperfServer:
@@ -36,6 +37,8 @@ class IperfServer:
         cmdline = SCRIPT + " " + self.host
         print("Pretending to run: " + cmdline)
 
+        #os.system(cmdline)
+
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
         if not self.country or not self.site:
@@ -59,7 +62,7 @@ class IperfServer:
                 break
 
         if location is None:
-            return 0
+            return 0.0
 
         server_coords = (location["latitude"], location["longitude"])
 
