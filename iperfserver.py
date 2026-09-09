@@ -24,14 +24,9 @@ class IperfServer:
         self.distance = self.distance_to_purdue()
 
         # stuff to find out for the assignment
-        self.latitude = None
-        self.latitude = None
-
         self.min_rtt = None
         self.max_rtt = None
         self.avg_rtt = None
-
-        self.distance_km = None
 
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
@@ -61,7 +56,6 @@ class IperfServer:
         server_coords = (location["latitude"], location["longitude"])
 
         return geodesic(PURDUE_COORDS, server_coords).km
-
 
     def str(self):
         return f"{self.provider} - {self.site}, {self.country} ({self.host}:{self.port}). {self.distance} km away."
