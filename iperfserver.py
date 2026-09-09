@@ -4,6 +4,9 @@ import json
 import geonamescache
 from geopy.distance import geodesic
 
+# ping script name
+SCRIPT = "./ping_server.sh"
+
 # hardcoded purdue coords
 PURDUE_COORDS = (40.4237, -86.9212)
 
@@ -27,6 +30,11 @@ class IperfServer:
         self.min_rtt = None
         self.max_rtt = None
         self.avg_rtt = None
+
+    # runs the ping test for each server
+    def run_ping(self):
+        cmdline = SCRIPT + " " + self.host
+        print("Pretending to run: " + cmdline)
 
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
@@ -88,3 +96,8 @@ count = 0
 for server in servers:
     print(f"{count}: {server.str()}")
     count = count + 1
+
+print("\n\n")
+
+for server in servers:
+    server.run_ping()
