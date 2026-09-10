@@ -46,13 +46,33 @@ class IperfServer:
         # https://docs.python.org/3/library/os.html#os.popen
         # https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects
 
+        """
         status = os.system(cmdline)
         code = os.waitstatus_to_exitcode(status)
 
         print("Exited with: " + str(code))
 
         if code != 0:
-          raise ValueError("oops")
+            raise ValueError("oops")
+        """
+
+        pipe = os.popen(cmdline)	
+
+        line = pipe.readline()
+        print("Got: " + line)
+
+        parsed = json.loads(line)
+        print("Parsed: " + str(parsed))
+        print("Type: " + str(type(parsed["max"])))
+        print("Maximum: " + str(parsed["max"]))
+
+        status = pipe.close()
+
+        if status is not None:
+            code = os.waitstatus_to_exitcode(status)
+            print("Exited with: " + str(code))
+
+            raise ValueError("uh-oh")
 
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
