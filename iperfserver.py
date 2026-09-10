@@ -37,36 +37,18 @@ class IperfServer:
         cmdline = SCRIPT + " " + self.host
         print("\nAbout to run: " + cmdline)
 
-        # ** NOTE **
-        # I am planning to use os.popen() here instead
-        # because I then can get the output of the script with
-        # readline()
-        #
-        # See:
-        # https://docs.python.org/3/library/os.html#os.popen
-        # https://docs.python.org/3/tutorial/inputoutput.html#methods-of-file-objects
-
-        """
-        status = os.system(cmdline)
-        code = os.waitstatus_to_exitcode(status)
-
-        print("Exited with: " + str(code))
-
-        if code != 0:
-            raise ValueError("oops")
-        """
-
         pipe = os.popen(cmdline)	
 
         line = pipe.readline()
-        print("Got: " + line)
+        #print("Got: " + line)
 
         parsed = json.loads(line)
-        print("Parsed: " + str(parsed))
-        print("Type: " + str(type(parsed["max"])))
-        print("Maximum: " + str(parsed["max"]))
+        #print("Parsed: " + str(parsed))
 
         status = pipe.close()
+
+        if status is None:
+            print("Congrats. Script didn't crash")
 
         if status is not None:
             code = os.waitstatus_to_exitcode(status)
@@ -137,5 +119,18 @@ for server in servers:
 
 print("\n\n")
 
-for server in servers:
-    server.run_ping()
+bloop = IperfServer(
+    'doesntexist.biz',
+    5201,
+    "-R",
+    10,
+    "Europe",
+    "Germany",
+    "Hamburg",
+    "DATAPACKET"
+)
+
+bloop.run_ping()
+
+#for server in servers:
+#    server.run_ping()

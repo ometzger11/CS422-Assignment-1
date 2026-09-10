@@ -7,9 +7,18 @@
 
 NPINGS=4
 
-ping -c $NPINGS $1 > ping_results.txt
+output=$(ping -c $NPINGS $1)
+retval=$?
 
-line=$(cat ping_results.txt | grep rtt | awk -F "=" '{print $2}')
+#echo "Status: $retval"
+#echo "$output"
+
+if [ $retval -ne 0 ]; then
+	echo "{\"exitcode\": $retval}"
+	exit
+fi
+
+line=$(echo "$output" | grep rtt | awk -F "=" '{print $2}')
 
 min=$(echo $line | awk -F "/" '{print $1}')
 avg=$(echo $line | awk -F "/" '{print $2}')
