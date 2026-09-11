@@ -44,8 +44,9 @@ def parse_traceroute(output):
     
     return hops
 
-# testing output
-output = run_traceroute("google.com")
-if output:
-    hops = parse_traceroute(output)
-    print(hops)
+# testing outputi
+if __name__ == "__main__":
+	output = run_traceroute("google.com")
+	if output:
+	    hops = parse_traceroute(output)
+	    print(hops)
