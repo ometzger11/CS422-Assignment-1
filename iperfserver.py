@@ -11,6 +11,29 @@ import matplotlib.pyplot as plt
 # our shared utilities for parts 1 and 2
 from server_utils import IperfServer, parse_servers
 
+SCRIPT = "./ping_server.sh"
+
+def run_ping(server):
+    cmdline = SCRIPT + " " + server.host
+    print("\nAbout to run: " + cmdline)
+    pipe = os.popen(cmdline)
+    line = pipe.readline()
+    status = pipe.close()
+
+    if status is not None:
+        code = os.waitstatus_to_exitcode(status)
+        raise RuntimeError(f"Script {SCRIPT} crashed with exit code {code}")
+
+    parsed = json.loads(line)
+
+    if "exitcode" in parsed:
+        print(f"Ping failed for {server.host}")
+    else:
+        server.min_rtt = parsed["min"]
+        server.avg_rtt = parsed["avg"]
+        server.max_rtt = parsed["max"]
+        print(f"Results for {server.host}: Min={server.min_rtt}, Avg={server.avg_rtt}, Max={server.max_rtt}")
+
 local_server = IperfServer(
     "localhostasdfsdf.biz",
     None,
@@ -77,7 +100,7 @@ for server in servers:
         continue
 
     # Run ping test right now (synchronous)
-    server.run_ping()
+    run_ping(server)
 
     # Servers without data due to failed ping (unreachable)
     if server.avg_rtt is None:

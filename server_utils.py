@@ -1,11 +1,9 @@
 # This is a utility module that contains IperfServer class and parse_servers() function, needed for part 2
 
-import os
 import json
 import geonamescache
 from geopy.distance import geodesic
 
-SCRIPT = "./ping_server.sh"
 PURDUE_COORDS = (40.4237, -86.9212)
 gc = geonamescache.GeonamesCache(min_city_population=1000)
 
@@ -28,27 +26,6 @@ class IperfServer:
         self.min_rtt = None
         self.avg_rtt = None
         self.max_rtt = None
-
-    def run_ping(self):
-        cmdline = SCRIPT + " " + self.host
-        print("\nAbout to run: " + cmdline)
-        pipe = os.popen(cmdline)
-        line = pipe.readline()
-        status = pipe.close()
-
-        if status is not None:
-            code = os.waitstatus_to_exitcode(status)
-            raise RuntimeError(f"Script {SCRIPT} crashed with exit code {code}")
-
-        parsed = json.loads(line)
-
-        if "exitcode" in parsed:
-            print(f"Ping failed for {self.host}")
-        else:
-            self.min_rtt = parsed["min"]
-            self.avg_rtt = parsed["avg"]
-            self.max_rtt = parsed["max"]
-            print(f"Results for {self.host}: Min={self.min_rtt}, Avg={self.avg_rtt}, Max={self.max_rtt}")
 
     def distance_to_purdue(self):
         if not self.country or not self.site:
