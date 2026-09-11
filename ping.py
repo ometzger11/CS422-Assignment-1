@@ -6,6 +6,7 @@ import geonamescache
 from geopy.distance import geodesic
 
 # for plot generation
+import numpy as np
 import matplotlib.pyplot as plt
 
 # our shared utilities for parts 1 and 2
@@ -62,12 +63,12 @@ plt.ylabel("Average RTT (ms)")
 xvals = []
 yvals = []
 
-earlycutoff = 8
+#earlycutoff = 8
 
 count = 0
 for server in servers:
-    if count >= earlycutoff:
-        break
+    #if count >= earlycutoff:
+    #    break
 
     # Servers skipped due to lack of geolocation data (bad city name)
     if server.distance is None:
@@ -87,5 +88,5 @@ for server in servers:
 
     count += 1
 
-plt.plot(xvals, yvals, 'bo')
+plt.scatter(xvals, yvals, c=np.random.randint(0, 8, count), alpha=0.7)
 plt.savefig("distance_vs_rtt.pdf")

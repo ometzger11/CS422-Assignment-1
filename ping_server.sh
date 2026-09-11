@@ -5,9 +5,10 @@
 # Usage:
 # ping_server.sh [ip_addr]
 
+INTERVAL="0.005"
 NPINGS=10
 
-output=$(ping -c $NPINGS $1)
+output=$(ping -i $INTERVAL -c $NPINGS $1)
 retval=$?
 
 #echo "Status: $retval"
