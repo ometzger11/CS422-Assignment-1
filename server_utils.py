@@ -5,6 +5,8 @@ import geonamescache
 from geopy.distance import geodesic
 
 PURDUE_COORDS = (40.4237, -86.9212)
+
+print("Generating geocache...")
 gc = geonamescache.GeonamesCache(min_city_population=1000)
 
 class IperfServer:

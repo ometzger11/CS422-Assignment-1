@@ -47,6 +47,8 @@ local_server = IperfServer(
 
 servers = [local_server] + parse_servers("listed_iperf3_servers.json")
 
+print("\nServer list:")
+
 count = 0
 for server in servers:
     print(f"{count}: {server.str()}")
