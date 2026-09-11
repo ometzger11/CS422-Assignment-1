@@ -88,4 +88,4 @@ for server in servers:
     count += 1
 
 plt.plot(xvals, yvals, 'bo')
-plt.savefig("graph1.pdf")
+plt.savefig("distance_vs_rtt.pdf")
