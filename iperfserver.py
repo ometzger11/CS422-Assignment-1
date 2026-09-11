@@ -49,10 +49,10 @@ class IperfServer:
             raise RuntimeError(f"Script {SCRIPT} crashed with exit code {code}")
 
         parsed = json.loads(line)
-        print("Parsed: " + str(parsed))
+        #print("Parsed: " + str(parsed))
 
         if "exitcode" in parsed:
-            print("Looks like the ping failed. Sorry about that")
+            print(f"Ping failed for {self.host}")
         else:
             self.min_rtt = parsed["min"]
             self.avg_rtt = parsed["avg"]
@@ -154,4 +154,8 @@ baz.run_ping()
 """
 
 for server in servers:
+    if server.distance == 0.0:
+        print("\nSkipping " + server.host)
+        continue
+
     server.run_ping()
