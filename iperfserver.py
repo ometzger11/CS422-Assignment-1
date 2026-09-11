@@ -35,7 +35,7 @@ def run_ping(server):
         print(f"Results for {server.host}: Min={server.min_rtt}, Avg={server.avg_rtt}, Max={server.max_rtt}")
 
 local_server = IperfServer(
-    "localhostasdfsdf.biz",
+    "localhost",
     None,
     None,
     None,
@@ -53,33 +53,6 @@ for server in servers:
     count = count + 1
 
 print("\n\n")
-
-"""
-foobar = IperfServer(
-    "google.com",
-    5201,
-    "-R",
-    10,
-    "North America",
-    "US",
-    "San Francisco",
-    "DATAPACKET"
-)
-
-baz = IperfServer(
-    "doesntexist.biz",
-    5201,
-    "-R",
-    10,
-    "Europe",
-    "DE",
-    "Hamburg",
-    "DATAPACKET"
-)
-
-foobar.run_ping()
-baz.run_ping()
-"""
 
 plt.xlabel("Distance (km)")
 plt.ylabel("Average RTT (ms)")
