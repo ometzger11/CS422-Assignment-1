@@ -5,6 +5,9 @@ import json
 import geonamescache
 from geopy.distance import geodesic
 
+# for plot generation
+import matplotlib.pyplot as plt
+
 # ping script name
 SCRIPT = "./ping_server.sh"
 
@@ -123,7 +126,7 @@ def parse_servers(filename):
     return servers
 
 local_server = IperfServer(
-    "localhost",
+    "localhostasdfsdf.biz",
     None,
     None,
     None,
@@ -169,9 +172,36 @@ foobar.run_ping()
 baz.run_ping()
 """
 
+plt.xlabel("Distance (km)")
+plt.ylabel("Average RTT (ms)")
+
+xvals = []
+yvals = []
+
+earlycutoff = 8
+
+count = 0
 for server in servers:
+    if count >= earlycutoff:
+        break
+
+    # Servers skipped due to lack of geolocation data (bad city name)
     if server.distance is None:
         print("\nSkipping " + server.host)
         continue
 
+    # Run ping test right now (synchronous)
     server.run_ping()
+
+    # Servers without data due to failed ping (unreachable)
+    if server.avg_rtt is None:
+        print("No data for " + server.host)
+        continue
+
+    xvals.append(server.distance)
+    yvals.append(server.avg_rtt)
+
+    count += 1
+
+plt.plot(xvals, yvals, 'bo')
+plt.savefig("graph1.pdf")

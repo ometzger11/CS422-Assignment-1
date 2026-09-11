@@ -5,7 +5,8 @@
 # Usage:
 # ping_server.sh [ip_addr]
 
-NPINGS=4
+#NPINGS=10
+NPINGS=2
 
 output=$(ping -c $NPINGS $1)
 retval=$?
