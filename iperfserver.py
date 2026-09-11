@@ -29,8 +29,8 @@ class IperfServer:
 
         # stuff to find out for the assignment
         self.min_rtt = None
-        self.max_rtt = None
         self.avg_rtt = None
+        self.max_rtt = None
 
     # runs the ping test for each server
     def run_ping(self):
@@ -42,19 +42,26 @@ class IperfServer:
         line = pipe.readline()
         #print("Got: " + line)
 
-        parsed = json.loads(line)
-        #print("Parsed: " + str(parsed))
-
         status = pipe.close()
-
-        if status is None:
-            print("Congrats. Script didn't crash")
 
         if status is not None:
             code = os.waitstatus_to_exitcode(status)
-            print("Exited with: " + str(code))
+            raise RuntimeError(f"Script {SCRIPT} crashed with exit code {code}")
 
-            raise ValueError("uh-oh")
+        parsed = json.loads(line)
+        print("Parsed: " + str(parsed))
+
+        if "exitcode" in parsed:
+            print("Looks like the ping failed. Sorry about that")
+        else:
+            self.min_rtt = parsed["min"]
+            self.avg_rtt = parsed["avg"]
+            self.max_rtt = parsed["max"]
+
+            print(f"Results for {self.host}")
+            print(f"Minimum: {self.min_rtt}")
+            print(f"Average: {self.avg_rtt}")
+            print(f"Maximum: {self.max_rtt}")
 
     # helper for finding the distance in km from the server location to Purdue
     def distance_to_purdue(self):
@@ -119,18 +126,30 @@ for server in servers:
 
 print("\n\n")
 
-bloop = IperfServer(
-    'doesntexist.biz',
+foobar = IperfServer(
+    "google.com",
+    5201,
+    "-R",
+    10,
+    "North America",
+    "US",
+    "San Francisco",
+    "DATAPACKET"
+)
+
+baz = IperfServer(
+    "doesntexist.biz",
     5201,
     "-R",
     10,
     "Europe",
-    "Germany",
+    "DE",
     "Hamburg",
     "DATAPACKET"
 )
 
-bloop.run_ping()
+foobar.run_ping()
+baz.run_ping()
 
 #for server in servers:
 #    server.run_ping()
