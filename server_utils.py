@@ -69,6 +69,9 @@ class IperfServer:
         server_coords = (location["latitude"], location["longitude"])
         return geodesic(PURDUE_COORDS, server_coords).km
 
+    def str(self):
+        return f"{self.provider} - {self.site}, {self.country} ({self.host}:{self.port}). {self.distance} km away."
+
 def parse_servers(filename):
     with open(filename, "r") as file:
         data = json.load(file)
