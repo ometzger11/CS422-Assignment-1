@@ -15,6 +15,7 @@ PURDUE_COORDS = (40.4237, -86.9212)
 gc = geonamescache.GeonamesCache(min_city_population=1000)
 
 # represents an actual server with info from the JSON dump
+# if site is None, the location is assumed to be this machine (localhost)
 class IperfServer:
     def __init__(self, host, port, options, gbps, continent, country, site, provider):
         self.host = host
@@ -25,7 +26,11 @@ class IperfServer:
         self.country = country
         self.site = site
         self.provider = provider
-        self.distance = self.distance_to_purdue()
+
+        if self.site is None:
+            self.distance = 0.0
+        else:
+            self.distance = self.distance_to_purdue()
 
         # stuff to find out for the assignment
         self.min_rtt = None
@@ -86,7 +91,7 @@ class IperfServer:
                 break
 
         if location is None:
-            return 0.0
+            return None
 
         server_coords = (location["latitude"], location["longitude"])
 
@@ -117,7 +122,18 @@ def parse_servers(filename):
 
     return servers
 
-servers = parse_servers("listed_iperf3_servers.json")
+local_server = IperfServer(
+    "localhost",
+    None,
+    None,
+    None,
+    "North America",
+    "US",
+    None,
+    None
+)
+
+servers = [local_server] + parse_servers("listed_iperf3_servers.json")
 
 count = 0
 for server in servers:
@@ -154,7 +170,7 @@ baz.run_ping()
 """
 
 for server in servers:
-    if server.distance == 0.0:
+    if server.distance is None:
         print("\nSkipping " + server.host)
         continue
 
