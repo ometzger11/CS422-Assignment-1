@@ -126,6 +126,7 @@ for server in servers:
 
 print("\n\n")
 
+"""
 foobar = IperfServer(
     "google.com",
     5201,
@@ -150,6 +151,7 @@ baz = IperfServer(
 
 foobar.run_ping()
 baz.run_ping()
+"""
 
-#for server in servers:
-#    server.run_ping()
+for server in servers:
+    server.run_ping()
