@@ -46,7 +46,7 @@ for server in chosen:
         
         print(f"  Hops: {hop_count}, Total RTT: {total_rtt:.2f}ms")
 
-# plot 1 section
+# plot 1 section (bar chart)
 fig, ax = plt.subplots(figsize=(12, 10))
 
 servers_list = list(all_hops.keys())
@@ -111,7 +111,7 @@ plt.tight_layout()
 plt.savefig('hop_breakdown.pdf')
 print("\nPlot saved: hop_breakdown.pdf")
 
-# Plot 2: Hop count vs total RTT
+# plot 2 section (scatter plot)
 plt.figure(figsize=(10, 6))
 plt.scatter(hop_counts, total_rtts, s=100, alpha=0.6)
 plt.xlabel('Hop Count')
