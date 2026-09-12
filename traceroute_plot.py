@@ -46,54 +46,70 @@ for server in chosen:
         
         print(f"  Hops: {hop_count}, Total RTT: {total_rtt:.2f}ms")
 
-# start of plot 1 (bar chart)
-fig, ax = plt.subplots(figsize=(12, 12))
+# plot 1 section
+fig, ax = plt.subplots(figsize=(12, 10))
 
 servers_list = list(all_hops.keys())
 x_pos = np.arange(len(servers_list))
 bottoms = np.zeros(len(servers_list))
 
-# find the max hop count out of every server
-max_hops = 0
+# find max hop count
+max_hop_num = 0
 for hops in all_hops.values():
-    max_hop_num = 0
     for h, r in hops:
         if h > max_hop_num:
             max_hop_num = h
-    if max_hop_num > max_hops:
-        max_hops = max_hop_num
 
-# make the hops different colors
-for hop_num in range(1, max_hops + 1):
-    hop_rtts = []
+# Color each hop differently
+for hop_num in range(1, max_hop_num + 1):
+    hop_latencies = []
     for server in servers_list:
         hops = all_hops[server]
-        hop_data = []
+        
+        # get RTT for this hop
+        current_rtt = None
         for h, rtt in hops:
             if h == hop_num and rtt is not None:
-                hop_data.append(rtt)
+                current_rtt = rtt
+                break
         
-        if hop_data:
-            hop_rtts.append(hop_data[0])
+        # get RTT for previous hop
+        prev_rtt = None
+        if hop_num > 1:
+            for h, rtt in hops:
+                if h == hop_num - 1 and rtt is not None:
+                    prev_rtt = rtt
+                    break
+        
+        # calc per-hop latency, get dif between current hop and running total
+        if current_rtt is not None and prev_rtt is not None:
+            per_hop_latency = current_rtt - prev_rtt
+            # if negative treat as 0
+            if per_hop_latency < 0:
+                per_hop_latency = 0 
+        #first hop does not require a dif
+        elif current_rtt is not None and hop_num == 1:
+            per_hop_latency = current_rtt  
         else:
-            hop_rtts.append(0)
-    # only plot if data is present
-    if any(hop_rtts): 
-        ax.bar(x_pos, hop_rtts, bottom=bottoms, label=f'Hop {hop_num}')
-        bottoms += hop_rtts
+            per_hop_latency = 0
+        
+        hop_latencies.append(per_hop_latency)
+    # only plot if there's data
+    if any(hop_latencies): 
+        ax.bar(x_pos, hop_latencies, bottom=bottoms, label=f'Hop {hop_num}')
+        bottoms += hop_latencies
 
 ax.set_ylabel('RTT (ms)')
 ax.set_xlabel('Server')
 ax.set_title('Latency Breakdown by Hop')
 ax.set_xticks(x_pos)
-ax.set_ylim(0, max(bottoms) * 1.1) # adds 10% padding to the top
 ax.set_xticklabels(servers_list, rotation=45, ha='right')
 ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
 plt.tight_layout()
 plt.savefig('hop_breakdown.pdf')
 print("\nPlot saved: hop_breakdown.pdf")
 
-# start of plot 2 (scatter chart)
+# Plot 2: Hop count vs total RTT
 plt.figure(figsize=(10, 6))
 plt.scatter(hop_counts, total_rtts, s=100, alpha=0.6)
 plt.xlabel('Hop Count')
