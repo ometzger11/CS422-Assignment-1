@@ -73,13 +73,14 @@ for hop_num in range(1, max_hop_num + 1):
                 current_rtt = rtt
                 break
         
-        # get RTT for previous hop
+        # get RTT for most recently known previous hop
         prev_rtt = None
-        if hop_num > 1:
-            for h, rtt in hops:
-                if h == hop_num - 1 and rtt is not None:
+        prev_h = None
+        for h, rtt in hops:
+            if h < hop_num and rtt is not None:
+                if prev_rtt is None or h > prev_h:
                     prev_rtt = rtt
-                    break
+                    prev_h = h
         
         # calc per-hop latency, get dif between current hop and running total
         if current_rtt is not None and prev_rtt is not None:
@@ -105,6 +106,7 @@ ax.set_title('Latency Breakdown by Hop')
 ax.set_xticks(x_pos)
 ax.set_xticklabels(servers_list, rotation=45, ha='right')
 ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+ax.set_ylim(0, max(bottoms) * 1.1) # 10% padding to the top
 plt.tight_layout()
 plt.savefig('hop_breakdown.pdf')
 print("\nPlot saved: hop_breakdown.pdf")
