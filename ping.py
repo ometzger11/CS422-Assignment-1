@@ -57,6 +57,8 @@ for server in servers:
 
 print("\n\n")
 
+
+plt.title("Distance vs. Round-Trip Time")
 plt.xlabel("Distance (km)")
 plt.ylabel("Average RTT (ms)")
 
