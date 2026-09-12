@@ -20,6 +20,7 @@ echo "==============\n"
 
 $VENV_DIR/bin/python3 ping.py
 
+echo
 echo "Running Part 2"
 echo "==============\n"
 
